@@ -10,12 +10,20 @@ fls = list.files('input/ceqa_month_csvs/',full.names = T,recursive = T)
 flist = pblapply(fls,fread,cl = 6)
 
 temp_dt = rbindlist(flist,use.names = T, fill = T)
-temp_docs = dcast(temp_dt[,.(`SCH Number`,`Document Type`)][,.N,by=.(`SCH Number`,`Document Type`)],`SCH Number` ~ `Document Type`)
+temp_docs = dcast(temp_dt[,.(`SCH Number`,`Document Type`)][,.N,by=.(`SCH Number`,`Document Type`)],`SCH Number` ~ `Document Type`,fill = 0)
 
-fin = temp_dt[`Document Type`=='FIN']
+fwrite(temp_docs,'input/project_doctype_incidence_matrix.csv')
+
+
+#rownames(temp_docs) <- temp_docs$`SCH Number`
+#check out co-occurence
+crossprod(as.matrix(temp_docs[,.(EIR,FIN,MND,NEG,NOD,NOE)]))
+
+fin = temp_dt[`Document Type`=='EIR']
 fin[,`NOC Project Issues`:=NULL]
 fin[,`NOC Local Action`:=NULL]
-fwrite(fin,'input/ceqa_FIN.csv')
+fwrite(fin,'input/ceqa_EIR.csv')
+
 
 mnd = temp_dt[`Document Type`=='MND']
 mnd[,`NOC Project Issues`:=NULL]
