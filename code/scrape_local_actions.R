@@ -2,8 +2,10 @@ require(data.table)
 require(rvest)
 require(lubridate)
 require(pbapply)
-start_months = mdy('01/01/2020') - months(1:(20 * 12))
+current = paste(month(Sys.Date()),'01',year(Sys.Date()),sep = '/')
+start_months = mdy(current) - months(1:(20 * 12))
 end_months = start_months + months(1)
+
 base = 'https://ceqanet.opr.ca.gov/Search?StartRange='
 fill = '&EndRange='
 suffix = '&OutputFormat=CSV'

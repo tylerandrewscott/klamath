@@ -1,9 +1,12 @@
-require(data.table)
-require(rvest)
-require(lubridate)
-require(pbapply)
-start_months = mdy('01/01/2020') - months(1:(20 * 12))
+libs = c('tidyverse','data.table','rvest','lubridate','curl')
+need = libs[!libs %in% installed.packages()[,'Package'] ]
+lapply(need,install.packages)
+lapply(libs,require,character.only = T)
+
+current = paste(month(Sys.Date()),'01',year(Sys.Date()),sep = '/')
+start_months = mdy(current) - months(1:(20 * 12))
 end_months = start_months + months(1)
+
 base = 'https://ceqanet.opr.ca.gov/Search?StartRange='
 fill = '&EndRange='
 suffix = '&OutputFormat=CSV'
@@ -19,7 +22,7 @@ if(file.exists(result_file)){full_tdf = fread(result_file);full_tdf[!duplicated(
 if(nrow(full_tdf)>0){
 project_issues = project_issues[!project_issues%in%full_tdf$`Project Issue`]
 }
-full_tdf
+
 for(i in seq_along(project_issues)){
 print(project_issues[i])
 u_encodes = sapply(paste(rl,'&ProjectIssue=',project_issues[i],sep = ''),URLencode)
