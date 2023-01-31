@@ -13,7 +13,7 @@ rl = paste0(base,start_months,fill,end_months)
 fls = paste0('metadata/ceqa_month_csvs/ceqa_',start_months,'.csv')
 
 local_actions ='https://ceqanet.opr.ca.gov/Search/Advanced' %>% read_html() %>% html_nodes('#LocalAction') %>% html_nodes('option') %>% html_text(trim = T)
-result_file = '../../../Box/klamath/input/sch_local_action.csv'
+result_file = 'input/sch_local_action.csv'
 local_actions = local_actions[local_actions!='(Any)']
 
 if(file.exists(result_file)){full_tdf = fread(result_file);full_tdf[!duplicated(full_tdf),]}else{full_tdf = data.table()}
